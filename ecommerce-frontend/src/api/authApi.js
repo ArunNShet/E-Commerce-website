@@ -13,3 +13,16 @@ export function loginUser(payload) {
     body: JSON.stringify(payload)
   });
 }
+
+export function resetPassword(payload) {
+  return apiRequest("/api/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function getAdminCustomers(token) {
+  return apiRequest("/api/admin/customers", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}

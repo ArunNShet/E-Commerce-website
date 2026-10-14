@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/api/uploads/products").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole(UserRole.ADMIN.name())
@@ -71,19 +72,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> {
-            if ("admin".equals(username)) {
-                return User.builder()
-                        .username("admin")
-                        .password(passwordEncoder.encode("admin123"))
-                        .roles(UserRole.ADMIN.name())
-                        .build();
-            }
-
-            return userRepository.findByEmail(username)
+            return userRepository.findByPhone(username)
                     .map(user -> User.builder()
-                            .username(user.getEmail())
+                            .username(user.getPhone())
                             .password(user.getPasswordHash())
                             .roles(user.getRole().name())
                             .build())

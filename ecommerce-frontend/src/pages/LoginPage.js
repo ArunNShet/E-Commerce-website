@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authApi";
 import { setAuthSession } from "../lib/auth";
 import { showErrorToast, showSuccessToast } from "../lib/toast";
 
 function LoginPage({ onLogin }) {
-  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -16,11 +16,11 @@ function LoginPage({ onLogin }) {
     event.preventDefault();
     setLoading(true);
     try {
-      const data = await loginUser({ username, password });
-      const session = setAuthSession(data.accessToken, data.role);
+      const data = await loginUser({ phone, password });
+      const session = setAuthSession(data.accessToken, data.role, { phone });
       onLogin(session);
       showSuccessToast("Login successful.");
-      navigate(data.role === "ADMIN" ? "/admin/products" : "/");
+      navigate(data.role === "ADMIN" ? "/admin/dashboard" : "/");
     } catch (err) {
       showErrorToast(`Login failed: ${err.message}`);
     } finally {
@@ -33,11 +33,16 @@ function LoginPage({ onLogin }) {
       <h2>Login</h2>
       <form className="auth-form" onSubmit={onSubmit} autoComplete="off">
         <label>
-          Email
+          Phone Number
           <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="off"
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]{10}"
+            title="Enter a phone number with 10 digits"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+            autoComplete="tel"
+            required
           />
         </label>
         <label>
@@ -48,6 +53,7 @@ function LoginPage({ onLogin }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
+              required
             />
             <button
               type="button"
@@ -59,6 +65,11 @@ function LoginPage({ onLogin }) {
             </button>
           </div>
         </label>
+        <p className="muted auth-switch-text">
+          <Link to="/forgot-password" className="auth-switch-link">
+            Forgot password?
+          </Link>
+        </p>
         <button type="submit" className="auth-submit-button" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>

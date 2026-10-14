@@ -13,8 +13,7 @@ const categories = [
   { icon: "Jar", name: "Pickles", count: "24 items" },
   { icon: "Chilli", name: "Spices", count: "18 items" },
   { icon: "Blend", name: "Masalas", count: "22 items" },
-  { icon: "Crisp", name: "Papad", count: "10 items" },
-  { icon: "Table", name: "Condiments", count: "16 items" },
+  { icon: "Crisp", name: "Papad", count: "10 items" }
 ];
 
 const craftSteps = [

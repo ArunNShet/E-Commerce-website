@@ -3,6 +3,8 @@ package com.project.ecommerce.service;
 import com.project.ecommerce.dto.CreateProductRequest;
 import com.project.ecommerce.dto.ProductResponse;
 import com.project.ecommerce.exception.ResourceNotFoundException;
+import com.project.ecommerce.model.Category;
+import com.project.ecommerce.repository.CategoryRepository;
 import com.project.ecommerce.model.Product;
 import com.project.ecommerce.model.ProductStatus;
 import com.project.ecommerce.repository.ProductRepository;
@@ -18,6 +20,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +28,9 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
     private ProductService productService;
@@ -35,6 +41,7 @@ class ProductServiceTest {
                 "Phone",
                 "250g",
                 "Smart phone",
+                "Pickles",
                 "https://example.com/phone.png",
                 BigDecimal.valueOf(899.99),
                 3
@@ -44,6 +51,12 @@ class ProductServiceTest {
             Product product = invocation.getArgument(0);
             product.setId(1L);
             return product;
+        });
+        when(categoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
+        when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> {
+            Category category = invocation.getArgument(0);
+            category.setId(10L);
+            return category;
         });
 
         ProductResponse response = productService.create(request);
@@ -58,6 +71,7 @@ class ProductServiceTest {
                 "Cable",
                 "100g",
                 "Fast charging cable",
+                "Condiments",
                 "https://example.com/cable.png",
                 BigDecimal.valueOf(9.99),
                 0
@@ -67,6 +81,12 @@ class ProductServiceTest {
             Product product = invocation.getArgument(0);
             product.setId(2L);
             return product;
+        });
+        when(categoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
+        when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> {
+            Category category = invocation.getArgument(0);
+            category.setId(11L);
+            return category;
         });
 
         ProductResponse response = productService.create(request);

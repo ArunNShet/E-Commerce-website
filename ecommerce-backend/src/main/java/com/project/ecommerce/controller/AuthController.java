@@ -3,6 +3,7 @@ package com.project.ecommerce.controller;
 import com.project.ecommerce.dto.AuthResponse;
 import com.project.ecommerce.dto.LoginRequest;
 import com.project.ecommerce.dto.RegisterRequest;
+import com.project.ecommerce.dto.ResetPasswordRequest;
 import com.project.ecommerce.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.noContent().build();
     }
 }

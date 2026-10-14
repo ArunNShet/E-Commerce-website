@@ -54,6 +54,7 @@ class ProductControllerTest {
                 "Phone",
                 "250g",
                 "Smart phone",
+                "Pickles",
                 "https://example.com/phone.png",
                 BigDecimal.valueOf(499.99),
                 10,
@@ -74,6 +75,7 @@ class ProductControllerTest {
                 "Laptop",
                 "500g",
                 "Work laptop",
+                "Masala",
                 "https://example.com/laptop.png",
                 BigDecimal.valueOf(1200.00),
                 5
@@ -92,6 +94,7 @@ class ProductControllerTest {
                 "Laptop",
                 "500g",
                 "Work laptop",
+                "Masala",
                 "https://example.com/laptop.png",
                 BigDecimal.valueOf(1200.00),
                 5
@@ -101,6 +104,7 @@ class ProductControllerTest {
                 "Laptop",
                 "500g",
                 "Work laptop",
+                "Masala",
                 "https://example.com/laptop.png",
                 BigDecimal.valueOf(1200.00),
                 5,

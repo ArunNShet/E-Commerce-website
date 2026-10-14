@@ -13,9 +13,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -36,10 +36,14 @@ public class User {
     private String name;
 
     @NotBlank
-    @Email
-    @Size(max = 190)
-    @Column(nullable = false, unique = true, length = 190)
-    private String email;
+@Pattern(regexp = "^[0-9]{10}$")
+@Size(max = 10)
+@Column(name = "phone", nullable = false, unique = true, length = 10)
+private String phone;
+
+    @Size(max = 120)
+    @Column(length = 120)
+    private String city;
 
     @NotBlank
     @Size(min = 8, max = 200)
@@ -91,12 +95,20 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getPasswordHash() {

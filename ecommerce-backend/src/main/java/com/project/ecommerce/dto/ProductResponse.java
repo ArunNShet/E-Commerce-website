@@ -10,6 +10,7 @@ public record ProductResponse(
         String name,
         String weight,
         String description,
+        String categoryName,
         String imageUrl,
         BigDecimal price,
         Integer stock,

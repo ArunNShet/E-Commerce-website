@@ -7,7 +7,7 @@ import { setAuthSession } from "../lib/auth";
 import { showErrorToast, showSuccessToast } from "../lib/toast";
 
 function RegisterPage({ onRegister }) {
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
+  const [form, setForm] = useState({ name: "", phone: "", city: "", password: "", confirmPassword: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,10 +27,14 @@ function RegisterPage({ onRegister }) {
     try {
       const data = await registerUser({
         name: form.name,
-        email: form.email,
+        phone: form.phone,
+        city: form.city,
         password: form.password
       });
-      const session = setAuthSession(data.accessToken, data.role);
+      const session = setAuthSession(data.accessToken, data.role, {
+        name: form.name,
+        phone: form.phone
+      });
       onRegister(session);
       showSuccessToast("Registration successful.");
       navigate("/");
@@ -46,17 +50,24 @@ function RegisterPage({ onRegister }) {
       <h2>Register</h2>
       <form className="auth-form" onSubmit={onSubmit}>
         <label>
-          Name
+          Full Name
           <input value={form.name} onChange={(e) => onChange("name", e.target.value)} required />
         </label>
         <label>
-          Email
+          Phone Number
           <input
-            type="email"
-            value={form.email}
-            onChange={(e) => onChange("email", e.target.value)}
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]{10}"
+            title="Enter a phone number with 10 digits"
+            value={form.phone}
+            onChange={(e) => onChange("phone", e.target.value.replace(/\D/g, ""))}
             required
           />
+        </label>
+        <label>
+          City
+          <input value={form.city} onChange={(e) => onChange("city", e.target.value)} maxLength={120} required />
         </label>
         <label>
           Password

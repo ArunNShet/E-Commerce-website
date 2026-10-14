@@ -12,6 +12,7 @@ public record UpdateProductRequest(
         @NotBlank @Size(max = 180) String name,
         @NotBlank @Size(max = 50) String weight,
         @Size(max = 1500) String description,
+        @Size(max = 120) String categoryName,
         @Size(max = 500) String imageUrl,
         @NotNull @DecimalMin("0.01") BigDecimal price,
         @NotNull @Min(0) Integer stock

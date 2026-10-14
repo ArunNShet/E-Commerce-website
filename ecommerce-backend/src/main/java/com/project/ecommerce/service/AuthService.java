@@ -3,6 +3,7 @@ package com.project.ecommerce.service;
 import com.project.ecommerce.dto.AuthResponse;
 import com.project.ecommerce.dto.LoginRequest;
 import com.project.ecommerce.dto.RegisterRequest;
+import com.project.ecommerce.dto.ResetPasswordRequest;
 import com.project.ecommerce.model.Cart;
 import com.project.ecommerce.model.User;
 import com.project.ecommerce.model.UserRole;
@@ -38,13 +39,14 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email already registered");
+        if (userRepository.existsByPhone(request.phone())) {
+            throw new IllegalArgumentException("Phone number already registered");
         }
 
         User user = new User();
         user.setName(request.name().trim());
-        user.setEmail(request.email().trim().toLowerCase());
+        user.setPhone(request.phone());
+        user.setCity(request.city().trim());
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setRole(UserRole.USER);
 
@@ -53,14 +55,14 @@ public class AuthService {
         user.setCart(cart);
 
         userRepository.save(user);
-        return buildTokenResponse(user.getEmail(), user.getRole().name());
+        return buildTokenResponse(user.getPhone(), user.getRole().name());
     }
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.username(), request.password())
+                    new UsernamePasswordAuthenticationToken(request.phone(), request.password())
             );
 
             String role = authentication.getAuthorities().stream()
@@ -68,10 +70,17 @@ public class AuthService {
                     .map(grantedAuthority -> grantedAuthority.getAuthority().replace("ROLE_", ""))
                     .orElse(UserRole.USER.name());
 
-            return buildTokenResponse(request.username(), role);
+            return buildTokenResponse(request.phone(), role);
         } catch (BadCredentialsException ex) {
             throw new IllegalArgumentException("Invalid credentials");
         }
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        User user = userRepository.findByPhone(request.phone())
+                .orElseThrow(() -> new IllegalArgumentException("No account found for this phone number"));
+
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
     }
 
     private AuthResponse buildTokenResponse(String username, String role) {

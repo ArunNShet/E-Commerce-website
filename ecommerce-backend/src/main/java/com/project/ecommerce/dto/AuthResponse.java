@@ -3,7 +3,7 @@ package com.project.ecommerce.dto;
 public record AuthResponse(
         String tokenType,
         String accessToken,
-        String username,
+        String phone,
         String role
 ) {
 }
